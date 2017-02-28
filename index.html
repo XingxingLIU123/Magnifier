@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+<div style="position: relative">
+    <img src="1.jpg" width="400" onMouseMove="showImg(event)" >
+</div>
+
+</body>
+<script>
+    function showImg(e){
+        var element= e.currentTarget,
+                imgWidth=element.width,
+                imgHeight=element.height;
+        var _img=document.createElement("img");
+        element.style.opacity="0.8";
+        _img.src= element.src;
+        //获取图片真实尺寸
+        var relWidth=_img.width,
+                relHeight=_img.height;
+        var divScale=2.5;
+        var imgScale=relWidth/imgWidth;
+        //插入div和img
+        var div=document.createElement("div");
+        div.setAttribute("id","showImg");
+        div.style.cssText="position:absolute;overflow:hidden;width:"+imgWidth*1.5+"px;height:"+imgHeight*1.5+"px;top:0;left:"+(imgWidth+10)+"px";
+        var newImg=document.createElement("img");
+        newImg.src=element.src;
+        newImg.setAttribute("id","newImg");
+        newImg.style.cssText="width:"+relWidth+"px;height:"+relHeight+"px;position:absolute;top:0;left:0";
+        if(!document.getElementById("showImg")){
+            element.parentNode.insertBefore(div,element.nextSibling);
+            div.appendChild(newImg)
+        }
+        //创建跟随鼠标移动的div
+        var flowDiv=document.createElement("div"),flowW=imgWidth/ 2.5,flowH=imgHeight/2.5;
+        flowDiv.setAttribute("id","flowDiv");
+        flowDiv.style.cssText="position:absolute;z-index:-1;border:1px solid #003D79;background:rgba(0,0,121,1);width:"+flowW+"px;height:"+flowH+"px";
+        //判断有无跟随div
+        if(!document.getElementById("flowDiv")){
+            element.parentNode.appendChild(flowDiv)
+        }else{
+            var flow=document.getElementById("flowDiv");
+            var _newImg=document.getElementById("newImg");
+            if(e.pageX < flowW/flowDivScale && e.pageY < flowH/flowDivScale){   //左上角
+                flow.style.left= "0";
+                flow.style.top= "0";
+                _newImg.style.left="0";
+                _newImg.style.top="0";
+            }
+            else if(e.pageX > flowW/flowDivScale&& e.pageX < imgWidth - flowW/flowDivScale && e.pageY < flowH/flowDivScale){  //上方左上角右上角之间
+                flow.style.left= e.pageX-flowW/2+"px";
+                flow.style.top= "0";
+                _newImg.style.left= "-"+(e.pageX-flowH/2)*scale+"px";
+                _newImg.style.top="0";
+            }
+            else if(e.pageX > imgWidth - flowW/2 && e.pageY < flowH/2){   //右上角
+                flow.style.left= imgWidth-flowWH+"px";
+                flow.style.top= "0";
+                _newImg.style.left= "auto";
+                _newImg.style.right= "0";
+                _newImg.style.top="0";
+            }
+            else if(e.pageY > imgHeight - flowH/2 && e.pageX < flowW/2){    //左下角
+                flow.style.left= "0";
+                flow.style.top= imgHeight-flowWH+"px";
+                _newImg.style.left= "0";
+                _newImg.style.top="-"+(imgHeight-flowWH)*scale+"px";
+            }
+            else if(e.pageY > imgHeight - flowWH/2 && e.pageX > imgWidth - flowWH/2){  //右下角
+                flow.style.left= imgWidth-flowWH+"px";
+                flow.style.top= imgHeight-flowWH+"px";
+                _newImg.style.left= "-"+(imgWidth-flowWH)*scale+"px";
+                _newImg.style.top="-"+(imgHeight-flowWH)*scale+"px";
+            }
+            else if(e.pageX > flowWH/2 && e.pageX < imgWidth - flowWH/2 && e.pageY > imgHeight- flowWH/2){  //下方方左下角右下角之间
+                flow.style.left= e.pageX-flowWH/2+"px";
+                flow.style.top= imgHeight-flowWH+"px";
+                _newImg.style.left= "-"+(e.pageX-flowWH/2)*scale+"px";
+                _newImg.style.top="-"+(imgHeight-flowWH)*scale+"px";
+            }
+            else if(e.pageX<flowWH/2 && e.pageY>flowWH/2 && e.pageY < imgHeight - flowWH/2){
+                flow.style.left= "0";
+                flow.style.top= e.pageY-flowWH/2+"px";
+                _newImg.style.left= "0";
+                _newImg.style.top="-"+(e.pageY-flowWH/2)*scale+"px";
+            }
+            else if(e.pageX > imgWidth - flowWH/2 && e.pageY>flowWH/2 && e.pageY < imgHeight - flowWH/2 ){
+                flow.style.left= imgWidth-flowWH+"px";
+                flow.style.top= e.pageY-flowWH/2+"px";
+                _newImg.style.left= "-"+(imgWidth-flowWH)*scale+"px";
+                _newImg.style.top="-"+(e.pageY-flowWH/2)*scale+"px";
+            }
+            else{
+                flow.style.left= e.pageX-flowWH/2+"px";
+                flow.style.top= e.pageY-flowWH/2+"px";
+                _newImg.style.left= "-"+(e.pageX-flowWH/2)*scale+"px";
+                _newImg.style.top="-"+(e.pageY-flowWH/2)*scale+"px";
+            }
+        }
+    }
+    /*function hideImg(){
+        var showImg=document.getElementById("showImg");
+        var flowDiv=document.getElementById("flowDiv");
+        showImg.parentNode.removeChild(showImg);
+        flowDiv.parentNode.removeChild(flowDiv)
+    }*/
+
+
+</script>
+</html>
